@@ -20,6 +20,7 @@ type FormData = {
   cep: string;
   setor: string;
   dataPreenchimento: string;
+  dataAdmissao: string;
 };
 
 const FormularioEstiloGoogleForms: React.FC = () => {
@@ -41,11 +42,14 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     cep: "",
     setor: "",
     dataPreenchimento: new Date().toLocaleDateString("pt-BR"),
+    dataAdmissao: "",
   });
 
   const [showEndereco, setShowEndereco] = useState(false);
   const [, setShowTipoFuncao] = useState(false);
   const [showSetor, setShowSetor] = useState(false);
+  const [generatedLogin, setGeneratedLogin] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -143,7 +147,14 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     try {
       const dataToSubmit = { ...formData };
       await addDoc(collection(db, "profissionais"), dataToSubmit);
+
+      const [firstName, ...lastNameParts] = formData.nomeCompleto.trim().split(" ");
+      const lastName = lastNameParts[lastNameParts.length - 1] || "";
+      const login = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+      setGeneratedLogin(login);
       alert("Formulário enviado com sucesso!");
+      setShowModal(true);
+        
 
       setFormData({
         nomeCompleto: "",
@@ -163,6 +174,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
         cep: "",
         setor: "",
         dataPreenchimento: new Date().toLocaleDateString("pt-BR"),
+        dataAdmissao: "",
       });
       setShowEndereco(false);
       setShowTipoFuncao(false);
@@ -170,6 +182,10 @@ const FormularioEstiloGoogleForms: React.FC = () => {
       console.error("Erro ao enviar o formulário:", error);
       alert("Erro ao enviar o formulário.");
     }
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
   };
 
   const planoDeFundo: React.CSSProperties = {
@@ -241,6 +257,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     color: "#555",
     marginBottom: "20px",
   };
+  
 
   return (
     <div style={planoDeFundo}>
@@ -271,6 +288,20 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               <option value="BV-Hospital">BV-Hospital</option>
             </select>
           </div>
+
+          <div>
+          <div style={titleStyle}>Data Admissão</div>
+        <input
+          type="date"
+          id="dataAdmissao"
+          name="dataAdmissao"
+          value={formData.dataAdmissao}
+          onChange={handleChange}
+          placeholder="Data de Admissão"
+          required
+          style={inputStyle}
+        />
+      </div>
           <div>
             <input
               type="text"
@@ -473,6 +504,52 @@ const FormularioEstiloGoogleForms: React.FC = () => {
             Enviar
           </button>
         </form>
+          {showModal && ( 
+            <div style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
+            }}>
+              <div style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "20px",
+              maxWidth: "500px",
+              width: "90%",
+              textAlign: "center",
+              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
+            }}>
+            <h2>Login Gerado</h2>
+            <p>
+              Login Computador: <strong>{generatedLogin}</strong>
+              <p>Senha Computador: 123456</p>
+            </p>
+            <p>
+              Login Psychi Health: <strong>{generatedLogin}</strong>
+              <p>Senha Psychi Health: primeiroacesso</p>
+            </p>
+            <button onClick={closeModal}
+            style={{
+              marginTop: "20px",
+              padding: "10px 20px",
+              background: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+            >Fechar</button>
+            </div>
+            </div>
+          )}
+
       </div>
     </div>
   );
