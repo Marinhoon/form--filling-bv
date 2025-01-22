@@ -213,10 +213,10 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   };
 
   const titleStyle: React.CSSProperties = {
-    fontSize: "2rem",
+    fontSize: "1.2rem",
     color: "#333",
     textAlign: "center",
-    marginBottom: "20px",
+    marginBottom: "10px",
     fontWeight: "bold",
   };
 
@@ -302,6 +302,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
           style={inputStyle}
         />
       </div>
+      <div style={titleStyle}>Dados Pessoais</div>
           <div>
             <input
               type="text"
@@ -531,10 +532,13 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               Login Computador: <strong>{generatedLogin}</strong>
               <p>Senha Computador: 123456</p>
             </p>
+            <br />
             <p>
-              Login Psychi Health: <strong>{generatedLogin}</strong>
+              Login Psychi Health: <strong>{generatedLogin?.replace('.', '_')}</strong>
               <p>Senha Psychi Health: primeiroacesso</p>
             </p>
+            <br />
+            <strong> <p>Esse login será válido em até 5 dias!</p> </strong>
             <button onClick={closeModal}
             style={{
               marginTop: "20px",
