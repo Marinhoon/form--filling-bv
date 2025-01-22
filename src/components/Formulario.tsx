@@ -154,7 +154,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
       setGeneratedLogin(login);
       alert("Formulário enviado com sucesso!");
       setShowModal(true);
-        
+
 
       setFormData({
         nomeCompleto: "",
@@ -257,7 +257,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     color: "#555",
     marginBottom: "20px",
   };
-  
+
 
   return (
     <div style={planoDeFundo}>
@@ -290,19 +290,19 @@ const FormularioEstiloGoogleForms: React.FC = () => {
           </div>
 
           <div>
-          <div style={titleStyle}>Data Admissão</div>
-        <input
-          type="date"
-          id="dataAdmissao"
-          name="dataAdmissao"
-          value={formData.dataAdmissao}
-          onChange={handleChange}
-          placeholder="Data de Admissão"
-          required
-          style={inputStyle}
-        />
-      </div>
-      <div style={titleStyle}>Dados Pessoais</div>
+            <div style={titleStyle}>Data Admissão</div>
+            <input
+              type="date"
+              id="dataAdmissao"
+              name="dataAdmissao"
+              value={formData.dataAdmissao}
+              onChange={handleChange}
+              placeholder="Data de Admissão"
+              required
+              style={inputStyle}
+            />
+          </div>
+          <div style={titleStyle}>Dados Pessoais</div>
           <div>
             <input
               type="text"
@@ -505,20 +505,20 @@ const FormularioEstiloGoogleForms: React.FC = () => {
             Enviar
           </button>
         </form>
-          {showModal && ( 
+        {showModal && (
+          <div style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}>
             <div style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1000,
-            }}>
-              <div style={{
               backgroundColor: "white",
               borderRadius: "8px",
               padding: "20px",
@@ -527,32 +527,34 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               textAlign: "center",
               boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
             }}>
-            <h2>Login Gerado</h2>
-            <p>
-              Login Computador: <strong>{generatedLogin}</strong>
-              <p>Senha Computador: 123456</p>
-            </p>
-            <br />
-            <p>
-              Login Psychi Health: <strong>{generatedLogin?.replace('.', '_')}</strong>
-              <p>Senha Psychi Health: primeiroacesso</p>
-            </p>
-            <br />
-            <strong> <p>Esse login será válido em até 5 dias!</p> </strong>
-            <button onClick={closeModal}
-            style={{
-              marginTop: "20px",
-              padding: "10px 20px",
-              background: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-            >Fechar</button>
+              <h2>Login Gerado</h2>
+              <p>
+                Login Computador: <strong>{generatedLogin}</strong>
+                <p>Senha Computador: 123456</p>
+              </p>
+              <br />
+              <p>
+                Login Psychi Health: <strong>{generatedLogin?.replace('.', '_')}</strong>
+                <p>Senha Psychi Health: primeiroacesso</p>
+              </p>
+              <br />
+              <strong><div style={descriptionStyle}>
+              Esse login será válido em até 5 dias!
+              </div> </strong>
+              <button onClick={closeModal}
+                style={{
+                  marginTop: "20px",
+                  padding: "10px 20px",
+                  background: "#007bff",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >Fechar</button>
             </div>
-            </div>
-          )}
+          </div>
+        )}
 
       </div>
     </div>
