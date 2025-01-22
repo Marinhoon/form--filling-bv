@@ -15,7 +15,7 @@ export const startFirestoreListener = () => {
         console.log("Novo documento adicionado:", novoDado);
 
         // Configuração da API do GLPI
-        const glpiURL = "http://10.10.101.61/glpi/apirest.php/"; 
+        const glpiURL = "https://suporte.ti.bomviverssa.com.br/apirest.php/";
         const apiToken = "1A6gFIprUjWN3UPtqcesVPz4A7Ky9x3lXMH1iQnU";
 
         try {
