@@ -51,6 +51,57 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   const [generatedLogin, setGeneratedLogin] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
+  const [, setIsSending] = useState(false);
+
+
+
+  const sendEmailNotification = async (formData: FormData) => {
+    try {
+      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxK5svYHLrWDRbFPDCULul9f5r9KKJpxPaWnoNpOhznrWQxO7wfIjAjr6GUXXFQ1mki/exec';
+  
+      // Enviar todos os campos do formData
+      const response = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode:'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nome: formData.nomeCompleto,
+          cpf: formData.CPF,
+          telefone: formData.telefone,
+          dataNascimento: formData.dataNascimento,
+          funcao: formData.funcao,
+          unidade: formData.unidade,
+          dataAdmissao: formData.dataAdmissao,
+          dataPreenchimento: formData.dataPreenchimento,
+          conselho: formData.conselho || '',
+          numeroConselho: formData.numeroConselho || '',
+          tipoFuncao: formData.tipoFuncao || '',
+          especialidade: formData.especialidade || '',
+          endereco: formData.endereco || '',
+          bairro: formData.bairro || '',
+          cep: formData.cep || '',
+          numero: formData.numero || '',
+          setor: formData.setor || '',
+        }),
+      });
+
+      console.log('Requisição enviada com sucesso (no-cors)');
+
+      if (!response.ok) {
+        throw new Error('Falha ao enviar a notificação por e-mail');
+      }
+  
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error('Erro ao enviar notificação:', error);
+      throw error;
+    }
+  };
+
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -124,6 +175,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     }));
   };
 
+
   const isFormValid = () => {
     const { CPF, telefone, nomeCompleto, unidade, funcao } = formData;
     if (!nomeCompleto || !unidade || !funcao || !CPF || !telefone) return false;
@@ -137,6 +189,8 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     return true;
   };
 
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid()) {
@@ -144,9 +198,13 @@ const FormularioEstiloGoogleForms: React.FC = () => {
       return;
     }
 
+    setIsSending(true);
+
     try {
       const dataToSubmit = { ...formData };
       await addDoc(collection(db, "profissionais"), dataToSubmit);
+
+      await sendEmailNotification(dataToSubmit).catch(console.error);
 
       const [firstName, ...lastNameParts] = formData.nomeCompleto.trim().split(" ");
       const lastName = lastNameParts[lastNameParts.length - 1] || "";
@@ -181,6 +239,8 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     } catch (error) {
       console.error("Erro ao enviar o formulário:", error);
       alert("Erro ao enviar o formulário.");
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -539,7 +599,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               </p>
               <br />
               <strong><div style={descriptionStyle}>
-              Esse login será válido em até 5 dias!
+                Esse login será válido em até 5 dias!
               </div> </strong>
               <button onClick={closeModal}
                 style={{
@@ -555,7 +615,6 @@ const FormularioEstiloGoogleForms: React.FC = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
