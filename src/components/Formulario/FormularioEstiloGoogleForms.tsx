@@ -1,27 +1,20 @@
-import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
-import { db } from "../../services/irebaseConfig";
-
-type FormData = {
-  numeroConselho: string | number | readonly string[] | undefined;
-  CPF: string;
-  dataNascimento: string;
-  nomeCompleto: string;
-  unidade: string;
-  id: string;
-  funcao: string;
-  conselho: string;
-  tipoFuncao: string;
-  especialidade: string;
-  telefone: string;
-  endereco: string;
-  bairro: string;
-  numero: string;
-  cep: string;
-  setor: string;
-  dataPreenchimento: string;
-  dataAdmissao: string;
-};
+import { FormData, Login } from "../../types/FormData";
+import { saveFormData } from "../../services/firebase";
+import { sendEmailNotification } from "../../services/emailNotification";
+import { formatCPF, formatTelefone, formatDataNascimento } from "../../utils/formatters";
+import { generateLogins } from "../../utils/loginGenerator";
+import FormularioModal from "./FormularioModal";
+import {
+  planoDeFundo,
+  containerStyle,
+  titleStyle,
+  formStyle,
+  inputStyle,
+  buttonStyle,
+  headerImageStyle,
+  descriptionStyle,
+} from "../../styles/FormularioStyles";
 
 const FormularioEstiloGoogleForms: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -46,54 +39,13 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   });
 
   const [showEndereco, setShowEndereco] = useState(false);
-  const [, setShowTipoFuncao] = useState(false);
+  const [showTipoFuncao, setShowTipoFuncao] = useState(false);
   const [showSetor, setShowSetor] = useState(false);
-  const [generatedLogin, setGeneratedLogin] = useState<string | null>(null);
+  const [generatedLogins, setGeneratedLogins] = useState<Login[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [, setIsSending] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  // Função para gerar senha de 4 dígitos para Call-Center
-  const generateRandomPin = () => {
-    return Math.floor(1000 + Math.random() * 9000).toString();
-  };
-
-  const sendEmailNotification = async (formData: FormData) => {
-    try {
-      const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxK5svYHLrWDRbFPDCULul9f5r9KKJpxPaWnoNpOhznrWQxO7wfIjAjr6GUXXFQ1mki/exec';
-
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nome: formData.nomeCompleto,
-          cpf: formData.CPF,
-          telefone: formData.telefone,
-          dataNascimento: formData.dataNascimento,
-          funcao: formData.funcao,
-          unidade: formData.unidade,
-          dataAdmissao: formData.dataAdmissao,
-          dataPreenchimento: formData.dataPreenchimento,
-          conselho: formData.conselho || '',
-          numeroConselho: formData.numeroConselho || '',
-          tipoFuncao: formData.tipoFuncao || '',
-          especialidade: formData.especialidade || '',
-          endereco: formData.endereco || '',
-          bairro: formData.bairro || '',
-          cep: formData.cep || '',
-          numero: formData.numero || '',
-          setor: formData.setor || '',
-        }),
-      });
-
-      console.log('Requisição enviada com sucesso (no-cors)');
-    } catch (error) {
-      console.error('Erro ao enviar notificação:', error);
-      throw error;
-    }
-  };
+  console.log('Estado atual:', { formData, showModal, generatedLogins });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -102,22 +54,11 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     let formattedValue = value;
 
     if (name === "CPF") {
-      formattedValue = value
-        .replace(/\D/g, "")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d)/, "$1.$2")
-        .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+      formattedValue = formatCPF(value);
     } else if (name === "telefone") {
-      formattedValue = value
-        .replace(/\D/g, "")
-        .replace(/(\d{2})(\d)/, "($1) $2")
-        .replace(/(\d{5})(\d{1,4})$/, "$1-$2");
+      formattedValue = formatTelefone(value);
     } else if (name === "dataNascimento") {
-      formattedValue = value
-        .replace(/\D/g, "")
-        .replace(/(\d{2})(\d)/, "$1/$2")
-        .replace(/(\d{2})(\d)/, "$1/$2")
-        .replace(/(\d{4})\d+?$/, "$1");
+      formattedValue = formatDataNascimento(value);
     }
 
     setFormData((prevData) => ({
@@ -189,75 +130,17 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     }
 
     setIsSending(true);
-
     try {
       const dataToSubmit = { ...formData };
-      await addDoc(collection(db, "profissionais"), dataToSubmit);
-
+      await saveFormData(dataToSubmit);
       await sendEmailNotification(dataToSubmit).catch(console.error);
 
-      // Gerar login base (nome.sobrenome) para Computador
-      const [firstName, ...lastNameParts] = formData.nomeCompleto.trim().split(" ");
-      const lastName = lastNameParts[lastNameParts.length - 1] || "";
-      const baseLogin = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
-      // Gerar login para TechSallus (PRIMEIRO ÚLTIMO)
-      const techSallusLogin = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
-      // Gerar login para Psychi Health (primeiro_último)
-      const psychiHealthLogin = `${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
-      // Gerar login para Atendimento Call-Center (primeiro)
-      const callCenterLogin = firstName.toLowerCase();
-
-      // Definir logins com base na função
-      let logins: { type: string; login: string; password: string }[] = [];
-      const funcao = formData.funcao;
-
-      // Funções com Login Computador e Psychi Health
-      const psychiHealthFunctions = [
-        "Médico",
-        "Enfermeiro",
-        "Tec. Enfermagem",
-        "Farmacêutico",
-        "Nutricionista",
-        "Psicólogo",
-        "Serviço Social",
-        "Terapia Ocupacional",
-      ];
-
-      // Funções com Login Computador e TechSallus
-      const techSallusFunctions = [
-        "Recepção-BV", // Recepcionista (Itaigara)
-        "Recepção-IT", // Recepcionista (Hospital)
-      ];
-
-      // Lógica para gerar logins
-      if (psychiHealthFunctions.includes(funcao)) {
-        logins = [
-          { type: "Computador", login: baseLogin, password: "12345678" },
-          { type: "Psychi Health", login: psychiHealthLogin, password: "primeiroacesso" },
-        ];
-      } else if (techSallusFunctions.includes(funcao)) {
-        logins = [
-          { type: "Computador", login: baseLogin, password: "12345678" },
-          { type: "TechSallus", login: techSallusLogin, password: "123456" },
-        ];
-      } else if (funcao === "Call-Center") {
-        const callCenterPin = generateRandomPin();
-        logins = [
-          { type: "Computador", login: baseLogin, password: "12345678" },
-          { type: "TechSallus", login: techSallusLogin, password: "123456" },
-          { type: "Atendimento Call-Center", login: callCenterLogin, password: callCenterPin },
-        ];
-      } else {
-        // Para outras funções, apenas Login Computador
-        logins = [{ type: "Computador", login: baseLogin, password: "12345678" }];
-      }
-
-      // Armazenar logins gerados no estado
-      setGeneratedLogin(JSON.stringify(logins));
+      const logins = generateLogins(formData.nomeCompleto, formData.funcao);
+      console.log('Logins gerados:', logins);
+      setGeneratedLogins(logins);
       alert("Formulário enviado com sucesso!");
       setShowModal(true);
 
-      // Resetar formulário
       setFormData({
         nomeCompleto: "",
         dataNascimento: "",
@@ -280,6 +163,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
       });
       setShowEndereco(false);
       setShowTipoFuncao(false);
+      setShowSetor(false);
     } catch (error) {
       console.error("Erro ao enviar o formulário:", error);
       alert("Erro ao enviar o formulário.");
@@ -289,78 +173,9 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   };
 
   const closeModal = () => {
+    console.log('Fechando modal');
     setShowModal(false);
-  };
-
-  const planoDeFundo: React.CSSProperties = {
-    backgroundImage: `url("https://i.imgur.com/STKAA6q.jpeg")`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    position: "relative",
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  };
-
-  const containerStyle: React.CSSProperties = {
-    maxWidth: "700px",
-    margin: "0 auto",
-    padding: "30px",
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    borderRadius: "10px",
-    fontFamily: "'Roboto', sans-serif",
-    boxShadow: "0px 8px 16px rgba(0, 0, 0, 0.15)",
-    position: "relative",
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: "1.2rem",
-    color: "#333",
-    textAlign: "center",
-    marginBottom: "10px",
-    fontWeight: "bold",
-  };
-
-  const formStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1.2rem",
-  };
-
-  const inputStyle: React.CSSProperties = {
-    width: "100%",
-    padding: "12px",
-    fontSize: "1rem",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-    boxSizing: "border-box",
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    padding: "15px",
-    fontSize: "1rem",
-    fontWeight: "bold",
-    color: "white",
-    backgroundColor: "#3CB371",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    marginTop: "20px",
-  };
-
-  const headerImageStyle: React.CSSProperties = {
-    maxWidth: "200px",
-    width: "100%",
-    borderRadius: "8px 8px 0 0",
-  };
-
-  const descriptionStyle: React.CSSProperties = {
-    fontSize: "0.9rem",
-    color: "#555",
-    marginBottom: "20px",
+    setGeneratedLogins([]);
   };
 
   return (
@@ -561,7 +376,6 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                   placeholder="Informe seu endereço"
                 />
               </div>
-
               <div>
                 <br />
                 <input
@@ -575,7 +389,6 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                   placeholder="Informe seu bairro"
                 />
               </div>
-
               <div>
                 <br />
                 <input
@@ -589,7 +402,6 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                   placeholder="Número da casa"
                 />
               </div>
-
               <div>
                 <br />
                 <input
@@ -605,71 +417,11 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               </div>
             </div>
           )}
-          <button type="submit" style={buttonStyle} disabled={!isFormValid()}>
+          <button type="submit" style={buttonStyle} disabled={!isFormValid() || isSending}>
             Enviar
           </button>
         </form>
-        {showModal && (
-          <div
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 1000,
-            }}
-          >
-            <div
-              style={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                padding: "20px",
-                maxWidth: "500px",
-                width: "90%",
-                textAlign: "center",
-                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-              }}
-            >
-              <h2>Logins Gerados</h2>
-              {generatedLogin &&
-                JSON.parse(generatedLogin).map(
-                  (login: { type: string; login: string; password: string }, index: number) => (
-                    <div key={index}>
-                      <p>
-                        {login.type}: <strong>{login.login}</strong>
-                      </p>
-                      <p>Senha {login.type}: {login.password}</p>
-                      <br />
-                    </div>
-                  )
-                )}
-              <strong>
-                <div style={descriptionStyle}>
-                  Esses logins serão válidos por até 5 dias!
-                </div>
-              </strong>
-              <button
-                onClick={closeModal}
-                style={{
-                  marginTop: "20px",
-                  padding: "10px 20px",
-                  background: "#007bff",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Fechar
-              </button>
-            </div>
-          </div>
-        )}
+        {showModal && <FormularioModal logins={generatedLogins} onClose={closeModal} />}
       </div>
     </div>
   );

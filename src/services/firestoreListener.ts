@@ -48,3 +48,5 @@ export const startFirestoreListener = () => {
 
   return unsubscribe;
 };
+
+export { db };
