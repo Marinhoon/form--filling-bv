@@ -12,7 +12,7 @@ export const startFirestoreListener = () => {
       if (change.type === "added") {
         const novoDado = change.doc.data(); 
 
-        console.log("Novo documento adicionado:", novoDado);
+        // console.log("Novo documento adicionado:", novoDado);
 
         // Configuração da API do GLPI
         const glpiURL = "https://suporte.ti.bomviverssa.com.br/apirest.php/";

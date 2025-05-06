@@ -39,13 +39,13 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   });
 
   const [showEndereco, setShowEndereco] = useState(false);
-  const [showTipoFuncao, setShowTipoFuncao] = useState(false);
+  const [, setShowTipoFuncao] = useState(false);
   const [showSetor, setShowSetor] = useState(false);
   const [generatedLogins, setGeneratedLogins] = useState<Login[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [isSending, setIsSending] = useState(false);
 
-  console.log('Estado atual:', { formData, showModal, generatedLogins });
+  // console.log('Estado atual:', { formData, showModal, generatedLogins });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -136,7 +136,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
       await sendEmailNotification(dataToSubmit).catch(console.error);
 
       const logins = generateLogins(formData.nomeCompleto, formData.funcao);
-      console.log('Logins gerados:', logins);
+      // console.log('Logins gerados:', logins);
       setGeneratedLogins(logins);
       alert("Formulário enviado com sucesso!");
       setShowModal(true);
@@ -173,7 +173,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   };
 
   const closeModal = () => {
-    console.log('Fechando modal');
+    // console.log('Fechando modal');
     setShowModal(false);
     setGeneratedLogins([]);
   };

@@ -54,18 +54,18 @@ export const generateLogins = (nomeCompleto: string, funcao: string): Login[] =>
   if (psychiHealthFunctions.includes(funcao)) {
     logins = [
       { type: "Computador", login: baseLogin, password: "12345678" },
-      { type: "Psychi Health", login: psychiHealthLogin, password: "primeiroacesso" },
+      { type: "Psychi Health", login: psychiHealthLogin, password: "123456" },
     ];
   } else if (techSallusFunctions.includes(funcao)) {
     logins = [
       { type: "Computador", login: baseLogin, password: "12345678" },
-      { type: "TechSallus", login: techSallusLogin, password: "primeiroacesso" },
+      { type: "TechSallus", login: techSallusLogin, password: "123456" },
     ];
   } else if (funcao === "Call-Center") {
     const callCenterPin = generateRandomPin();
     logins = [
       { type: "Computador", login: baseLogin, password: "12345678" },
-      { type: "TechSallus", login: techSallusLogin, password: "primeiroacesso" },
+      { type: "TechSallus", login: techSallusLogin, password: "123456" },
       { type: "Atendimento Call-Center", login: callCenterLogin, password: callCenterPin },
     ];
   } else {

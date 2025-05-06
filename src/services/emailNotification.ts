@@ -31,7 +31,7 @@ export const sendEmailNotification = async (formData: FormData) => {
       }),
     });
 
-    console.log('Requisição enviada com sucesso (no-cors)');
+    // console.log('Requisição enviada com sucesso (no-cors)');
   } catch (error) {
     console.error('Erro ao enviar notificação:', error);
     throw error;
