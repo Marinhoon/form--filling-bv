@@ -54,7 +54,7 @@ export const generateLogins = (nomeCompleto: string, funcao: string): Login[] =>
   if (psychiHealthFunctions.includes(funcao)) {
     logins = [
       { type: "Computador", login: baseLogin, password: "12345678" },
-      { type: "Psychi Health", login: psychiHealthLogin, password: "123456" },
+      { type: "Psychi Health", login: psychiHealthLogin, password: "primeiroacesso" },
     ];
   } else if (techSallusFunctions.includes(funcao)) {
     logins = [

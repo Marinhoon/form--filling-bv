@@ -23,7 +23,7 @@ const FormularioModal: React.FC<FormularioModalProps> = ({ logins, onClose }) =>
         ))}
         <strong>
           <div style={descriptionStyle}>
-            Esses logins serão válidos por até 5 dias!
+            Esse login será válido em até 5 dias!
           </div>
         </strong>
         <button onClick={onClose} style={modalButtonStyle}>
