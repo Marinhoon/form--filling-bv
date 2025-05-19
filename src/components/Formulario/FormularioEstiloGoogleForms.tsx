@@ -281,7 +281,8 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               style={inputStyle}
             >
               <option value="">Selecione sua função</option>
-              <option value="Administrativo">Administrativo</option>
+              <option value="Almoxarifado">Almoxarifado</option>
+              <option value="Apoio-Tecnico">Apoio-Técnico</option>
               <option value="Call-Center">Call-Center</option>
               <option value="Ed. Física">Educador Físico</option>
               <option value="Estagiário(a)">Estagiário(a)</option>
@@ -308,9 +309,10 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                 style={inputStyle}
               >
                 <option value="">Selecione o setor que irá estagiar</option>
-                <option value="Administração">Administração</option>
+                <option value="Almoxarifado">Almoxarifado</option>
                 <option value="Apoio-Técnico">Apoio-Técnico</option>
                 <option value="Call-Center">Call-Center</option>
+                <option value="CCIH">CCIH</option>
                 <option value="CME">CME</option>
                 <option value="Enfermagem">Enfermagem</option>
                 <option value="Compras">Compras</option>
