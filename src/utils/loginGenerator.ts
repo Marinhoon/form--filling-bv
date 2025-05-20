@@ -1,5 +1,10 @@
 import { Login } from "../types/FormData";
 
+// Função para remover acentos e caracteres especiais
+const removeAcentos = (str: string): string => {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
+
 export const generateLogins = (nomeCompleto: string, funcao: string): Login[] => {
   console.log('Gerando logins para:', { nomeCompleto, funcao });
 
@@ -9,8 +14,11 @@ export const generateLogins = (nomeCompleto: string, funcao: string): Login[] =>
     return [];
   }
 
+  // Normalizar nome (remover acentos e converter para minúsculas)
+  const nomeNormalizado = removeAcentos(nomeCompleto.trim().toLowerCase());
+  
   // Gerar login base (nome.sobrenome) para Computador
-  const [firstName, ...lastNameParts] = nomeCompleto.trim().split(" ");
+  const [firstName, ...lastNameParts] = nomeNormalizado.split(" ");
   const lastName = lastNameParts[lastNameParts.length - 1] || "";
   
   if (!firstName || !lastName) {
@@ -18,13 +26,13 @@ export const generateLogins = (nomeCompleto: string, funcao: string): Login[] =>
     return [];
   }
 
-  const baseLogin = `${firstName.toLowerCase()}.${lastName.toLowerCase()}`;
+  const baseLogin = `${firstName}.${lastName}`;
   // Gerar login para TechSallus (PRIMEIRO ÚLTIMO)
   const techSallusLogin = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
   // Gerar login para Psychi Health (primeiro_último)
-  const psychiHealthLogin = `${firstName.toLowerCase()}_${lastName.toLowerCase()}`;
+  const psychiHealthLogin = `${firstName}_${lastName}`;
   // Gerar login para Atendimento Call-Center (primeiro)
-  const callCenterLogin = firstName.toLowerCase();
+  const callCenterLogin = firstName;
 
   // Função para gerar senha de 4 dígitos para Call-Center
   const generateRandomPin = () => Math.floor(1000 + Math.random() * 9000).toString();
