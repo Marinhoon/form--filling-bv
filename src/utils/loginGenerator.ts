@@ -42,8 +42,7 @@ export const generateLogins = (
     "Nutricionista",
     "Psicólogo",
     "Serviço Social",
-    "Terapia Ocupacional",
-    "AuxiliarFarmacia"
+    "Terapia Ocupacional"
   ];
 
   const techSallusFunctions = ["Recepção-BV", "Recepção-IT", "AuxiliarFarmacia"];
