@@ -283,6 +283,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               <option value="">Selecione sua função</option>
               <option value="Almoxarifado">Almoxarifado</option>
               <option value="Apoio-Tecnico">Apoio-Técnico</option>
+              <option value="AuxiliarFarmacia">Auxiliar de Fármacia</option>
               <option value="Call-Center">Call-Center</option>
               <option value="Ed. Física">Educador Físico</option>
               <option value="Estagiário(a)">Estagiário(a)</option>

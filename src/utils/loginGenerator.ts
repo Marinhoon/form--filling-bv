@@ -20,6 +20,7 @@ export const generateLogins = (
   // Gera os logins base
   const loginBase = `${firstName}.${lastName}`; // Padrão com ponto para todos
   const loginTechSallus = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
+
   const loginCallCenter = firstName;
 
   // Apenas para (médicos) usa underline computador
@@ -42,9 +43,10 @@ export const generateLogins = (
     "Psicólogo",
     "Serviço Social",
     "Terapia Ocupacional",
+    "AuxiliarFarmacia"
   ];
 
-  const techSallusFunctions = ["Recepção-BV", "Recepção-IT"];
+  const techSallusFunctions = ["Recepção-BV", "Recepção-IT", "AuxiliarFarmacia"];
 
   if (funcoesMedicas.includes(funcao)) {
     return [
