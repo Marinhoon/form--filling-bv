@@ -14,6 +14,9 @@ import {
   buttonStyle,
   headerImageStyle,
   descriptionStyle,
+  welcomeModalStyle,
+  welcomeModalContentStyle,
+  welcomeTextStyle,
 } from "../../styles/FormularioStyles";
 
 const FormularioEstiloGoogleForms: React.FC = () => {
@@ -44,6 +47,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
   const [generatedLogins, setGeneratedLogins] = useState<Login[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [isSending, setIsSending] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(true);
 
   // console.log('Estado atual:', { formData, showModal, generatedLogins });
 
@@ -180,6 +184,49 @@ const FormularioEstiloGoogleForms: React.FC = () => {
 
   return (
     <div style={planoDeFundo}>
+      {/* Modal de Boas-Vindas */}
+      {showWelcomeModal && (
+        <div style={welcomeModalStyle}>
+          <div style={welcomeModalContentStyle}>
+            <h2 style={{ color: '#3CB371', marginBottom: '15px' }}>
+              Bem-vindo(a) ao Grupo Bom Viver!
+            </h2>
+            <p style={welcomeTextStyle}>
+              Você agora faz parte do time que é <strong>Referência em Saúde Mental</strong>.
+            </p>
+            <p style={welcomeTextStyle}>
+              <strong>Nossos valores:</strong> Humanização, ética, integridade, respeito,
+              profissionalismo, resultado sustentável e trabalho em equipe.
+            </p>
+            <p style={welcomeTextStyle}>
+              Conheça mais sobre nossa história:{' '}
+              <a
+                href="https://www.grupobomviver.com.br"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#3CB371', textDecoration: 'none' }}
+              >
+                www.grupobomviver.com.br
+              </a>
+            </p>
+            <button
+              onClick={() => setShowWelcomeModal(false)}
+              style={{
+                padding: '10px 25px',
+                backgroundColor: '#3CB371',
+                color: 'white',
+                border: 'none',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+              }}
+            >
+              Continuar
+            </button>
+          </div>
+        </div>
+      )}
       <div style={containerStyle}>
         <img
           src="https://bomviverssa.com.br/wp-content/themes/tema-bem-viver/assets/imagens/marca_bom_viver_tagline.png"
@@ -188,8 +235,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
         />
         <div style={titleStyle}>Cadastro de Profissional</div>
         <div style={descriptionStyle}>
-          Olá, aqui você irá realizar o preenchimento de dados para criação de
-          logins da unidade.
+          Preencha os dados abaixo para criação dos seus acessos na unidade.
         </div>
 
         <form onSubmit={handleSubmit} style={formStyle}>
