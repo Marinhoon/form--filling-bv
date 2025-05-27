@@ -126,6 +126,7 @@ export const welcomeModalContentStyle: React.CSSProperties = {
   width: '90%',
   boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
   textAlign: 'center',
+  fontFamily: "'Roboto', sans-serif",
 };
 
 export const welcomeTextStyle: React.CSSProperties = {
@@ -134,4 +135,5 @@ export const welcomeTextStyle: React.CSSProperties = {
   color: '#333',
   marginBottom: '20px',
   textAlign: 'left',
+  fontFamily: "'Roboto', sans-serif",
 };
