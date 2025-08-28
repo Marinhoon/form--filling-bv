@@ -72,7 +72,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
 
     if (name === "funcao") {
       setShowEndereco(true);
-      setShowSetor(value === "Estagiário(a)");
+      setShowSetor(value === "Estagiário(a)" || value === "Jovem Aprendiz");
       let conselho = "";
       if (value === "Médico") {
         conselho = "CRM";
@@ -327,22 +327,35 @@ const FormularioEstiloGoogleForms: React.FC = () => {
               style={inputStyle}
             >
               <option value="">Selecione sua função</option>
+              <option value="Administrativo">Administrativo</option>
               <option value="Almoxarifado">Almoxarifado</option>
-              <option value="Apoio-Tecnico">Apoio-Técnico</option>
+              <option value="Apoio Tecnico">Apoio Técnico</option>
               <option value="AuxiliarFarmacia">Auxiliar de Fármacia</option>
               <option value="Call-Center">Call-Center</option>
               <option value="Ed. Física">Educador Físico</option>
               <option value="Estagiário(a)">Estagiário(a)</option>
               <option value="Enfermeiro">Enfermeiro(a)</option>
-              <option value="Farmacêutico">Farmacêutico(a)</option>
+              <option value="Farmacêutico">Farmacêutico</option>
+              <option value="Faturamento">Faturamento</option>
+              <option value="Financeiro">Financeiro</option>
+               <option value="Jovem Aprendiz">Jovem Aprendiz</option>
+              <option value="Compras">Compras</option>
+              <option value="Conveniência">Conveniência</option>
+              <option value="Contabilidade">Contabilidade</option>
+              <option value="CME">CME</option>
+              <option value="CCIH">CCIH</option>
               <option value="Médico">Médico</option>
               <option value="Nutricionista">Nutricionista</option>
               <option value="Psicólogo">Psicólogo(a)</option>
               <option value="Recepção-BV">Recepcionista (Itaigara)</option>
               <option value="Recepção-IT">Recepcionista (Hospital)</option>
+              <option value="Recursos Humanos">Recursos Humanos</option>
+              <option value="Segurança do Trabalho">Segurança do Trabalho</option>
               <option value="Serviço Social">Serviço Social</option>
+              <option value="Tecnologia da Informação">Tecnologia da Informação</option>
               <option value="Tec. Enfermagem">Tec. Enfermagem</option>
               <option value="Terapia Ocupacional">Terapia Ocupacional</option>
+              <option value="Outros">Outros</option>
             </select>
           </div>
           {showSetor && (
@@ -355,9 +368,9 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                 required
                 style={inputStyle}
               >
-                <option value="">Selecione o setor que irá estagiar</option>
+                <option value="">Selecione o setor que irá atuar</option>
                 <option value="Almoxarifado">Almoxarifado</option>
-                <option value="Apoio-Técnico">Apoio-Técnico</option>
+                <option value="Apoio Técnico">Apoio Técnico</option>
                 <option value="Call-Center">Call-Center</option>
                 <option value="CCIH">CCIH</option>
                 <option value="CME">CME</option>
@@ -376,6 +389,8 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                 <option value="Segurança do Trabalho">Segurança do Trabalho</option>
                 <option value="Serviço Social">Serviço Social</option>
                 <option value="Tecnologia da Informação">Tecnologia da Informação</option>
+                <option value="Terapia Ocupacional">Terapia Ocupacional</option>
+                <option value="Outros">Outros</option>
               </select>
             </div>
           )}
