@@ -40,9 +40,21 @@ export const generateLogins = (
     "Psicólogo",
     "Serviço Social",
     "Terapia Ocupacional",
+    "Fisioterapeuta",
   ];
 
-  const techSallusFunctions = ["Recepção-BV", "Recepção-IT", "AuxiliarFarmacia"];
+  const techSallusFunctions = 
+  ["Recepção-BV",
+    "Recepção-IT",
+    "AuxiliarFarmacia",
+    "farmacia",
+    "Administrativo",
+    "RH",
+    "Financeiro",
+    "Faturamento",
+    "TI",
+    "Contabilidade",
+    "Almoxarifado",];
 
   if (funcoesMedicas.includes(funcao)) {
     return [
