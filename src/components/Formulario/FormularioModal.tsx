@@ -41,7 +41,7 @@ interface FormularioModalProps {
 }
 
 const FormularioModal: React.FC<FormularioModalProps> = ({ logins, onClose }) => {
-  console.log("Modal recebeu logins:", logins); // Debug
+  console.log("Modal recebeu logins:", logins);
 
   // Se não tiver logins, mostra mensagem de erro
   if (!logins || logins.length === 0) {
@@ -166,6 +166,7 @@ const FormularioModal: React.FC<FormularioModalProps> = ({ logins, onClose }) =>
                     borderLeft: `4px solid ${config.color}`,
                     boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
                     transition: "transform 0.2s, box-shadow 0.2s",
+                    cursor: "pointer"
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = "translateX(5px)";
@@ -194,8 +195,6 @@ const FormularioModal: React.FC<FormularioModalProps> = ({ logins, onClose }) =>
                             padding: "2px 6px",
                             borderRadius: "4px"
                           }}
-                          onClick={() => copyToClipboard(login.login, "Login")}
-                          style={{ cursor: "pointer" }}
                         >
                           {login.login}
                         </span>
@@ -271,7 +270,7 @@ const FormularioModal: React.FC<FormularioModalProps> = ({ logins, onClose }) =>
             fontSize: "0.85rem"
           }}
         >
-          ⏰ Atenção: Esse login será válidado em até 5 dias!
+          ⏰ Atenção: Esse login será válido por até 5 dias!
         </div>
 
         <button
