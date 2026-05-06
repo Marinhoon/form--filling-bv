@@ -8,33 +8,40 @@ export const generateLogins = (
   nomeCompleto: string,
   funcao: string
 ): Login[] => {
-  if (!nomeCompleto?.trim()) return [];
+  console.log("Gerando logins para:", { nomeCompleto, funcao });
+  
+  if (!nomeCompleto?.trim()) {
+    console.log("Nome completo vazio");
+    return [];
+  }
 
   // Normaliza e separa nome/sobrenome
   const nomeNormalizado = removeAcentos(nomeCompleto.trim().toLowerCase());
-  const [firstName, ...lastNameParts] = nomeNormalizado.split(" ");
-  const lastName = lastNameParts[lastNameParts.length - 1] || "";
+  const partes = nomeNormalizado.split(" ");
+  const firstName = partes[0] || "";
+  const lastName = partes.length > 1 ? partes[partes.length - 1] : "";
+  
+  console.log("Nome processado:", { firstName, lastName });
 
-  if (!firstName || !lastName) return [];
+  if (!firstName || !lastName) {
+    console.log("Nome ou sobrenome faltando");
+    return [];
+  }
 
   // Gera os logins base
-  const loginBase = `${firstName}.${lastName}`; // padrão com ponto
+  const loginBase = `${firstName}.${lastName}`;
   const loginTechSallus = `${firstName.toUpperCase()} ${lastName.toUpperCase()}`;
   const loginCallCenter = firstName;
-
-  // Logins com underline
-  const loginMedicos = `${firstName}_${lastName}`;
-  const loginPsychiHealth = `${firstName}_${lastName}`;
+  const loginUnderline = `${firstName}_${lastName}`;
 
   const generatePin = () => Math.floor(1000 + Math.random() * 9000).toString();
 
   // Lista de funções médicas
-  const funcoesMedicas = ["Médico"]; // médicos usam _ em todos logins
+  const funcoesMedicas = ["Médido"];
 
-  // Outras funções de saúde
-  const outrasFuncoesSaude = [
+  // Funções de saúde que terão acesso ao TechSallus + Psychi Health
+  const funcoesComTechSallus = [
     "Enfermeiro",
-    "Tec. Enfermagem",
     "Farmacêutico",
     "Nutricionista",
     "Psicólogo",
@@ -43,8 +50,14 @@ export const generateLogins = (
     "Fisioterapeuta",
   ];
 
-  const techSallusFunctions = 
-  ["Recepção-BV",
+  // Funções de saúde que NÃO terão TechSallus (apenas Computador + Psychi Health)
+  const funcoesSemTechSallus = [
+    "Tec. Enfermagem",
+  ];
+
+  // Funções administrativas
+  const techSallusFunctions = [
+    "Recepção-BV",
     "Recepção-IT",
     "AuxiliarFarmacia",
     "farmacia",
@@ -54,34 +67,95 @@ export const generateLogins = (
     "Faturamento",
     "TI",
     "Contabilidade",
-    "Almoxarifado",];
+    "Almoxarifado",
+    "Tecnologia da Informação",
+    "Recursos Humanos",
+    "Compras",
+    "Conveniência",
+    "Segurança do Trabalho",
+    "CCIH",
+    "CME",
+  ];
 
-  if (funcoesMedicas.includes(funcao)) {
-    return [
-      { type: "Computador", login: loginMedicos, password: "12345678" }, // underline
-      { type: "Psychi Health", login: loginPsychiHealth, password: "primeiroacesso" }, // underline
+  let logins: Login[] = [];
+
+  // ============================================
+  // ATENDIMENTO - CALL CENTER
+  // ============================================
+  if (funcao === "Call-Center") {
+    logins = [
+      { type: "Computador", login: loginBase, password: "12345678" },
+      { type: "TechSallus", login: loginTechSallus, password: "123456" },
+      { type: "Leucontroll", login: loginCallCenter, password: generatePin() },
     ];
-  } else if (outrasFuncoesSaude.includes(funcao)) {
-    return [
-      { type: "Computador", login: loginBase, password: "12345678" }, // ponto
-      { type: "Psychi Health", login: loginPsychiHealth, password: "primeiroacesso" }, // underline
-    ];
-  } else if (techSallusFunctions.includes(funcao)) {
-    return [
+  } 
+  // ============================================
+  // ATENDIMENTO - RECEPÇÕES
+  // ============================================
+  else if (funcao === "Recepção Emergência" || 
+           funcao === "Recepção Ambulatório" || 
+           funcao === "Recepção Itaigara") {
+    logins = [
       { type: "Computador", login: loginBase, password: "12345678" },
       { type: "TechSallus", login: loginTechSallus, password: "123456" },
     ];
-  } else if (funcao === "Call-Center") {
-    return [
+  }
+  // ============================================
+  // MÉDICOS
+  // ============================================
+  else if (funcoesMedicas.includes(funcao)) {
+    logins = [
+      { type: "Computador", login: loginUnderline, password: "12345678" },
+      { type: "Psychi Health", login: loginUnderline, password: "primeiroacesso" },
+    ];
+  } 
+  // ============================================
+  // ENFERMEIROS (com TechSallus + Psychi Health)
+  // ============================================
+  else if (funcao === "Enfermeiro") {
+    logins = [
+      { type: "Computador", login: loginBase, password: "12345678" },
+      { type: "Psychi Health", login: loginUnderline, password: "primeiroacesso" },
+      { type: "TechSallus", login: loginTechSallus, password: "123456" },
+    ];
+  }
+  // ============================================
+  // TEC. ENFERMAGEM (sem TechSallus)
+  // ============================================
+  else if (funcoesSemTechSallus.includes(funcao)) {
+    logins = [
+      { type: "Computador", login: loginBase, password: "12345678" },
+      { type: "Psychi Health", login: loginUnderline, password: "primeiroacesso" },
+    ];
+  }
+  // ============================================
+  // OUTRAS FUNÇÕES DE SAÚDE (com TechSallus + Psychi Health)
+  // ============================================
+  else if (funcoesComTechSallus.includes(funcao)) {
+    logins = [
+      { type: "Computador", login: loginBase, password: "12345678" },
+      { type: "Psychi Health", login: loginUnderline, password: "primeiroacesso" },
+      { type: "TechSallus", login: loginTechSallus, password: "123456" },
+    ];
+  } 
+  // ============================================
+  // FUNÇÕES ADMINISTRATIVAS
+  // ============================================
+  else if (techSallusFunctions.includes(funcao)) {
+    logins = [
       { type: "Computador", login: loginBase, password: "12345678" },
       { type: "TechSallus", login: loginTechSallus, password: "123456" },
-      {
-        type: "Atendimento Call-Center",
-        login: loginCallCenter,
-        password: generatePin(),
-      },
+    ];
+  } 
+  // ============================================
+  // FALLBACK
+  // ============================================
+  else {
+    logins = [
+      { type: "Computador", login: loginBase, password: "12345678" },
     ];
   }
 
-  return [{ type: "Computador", login: loginBase, password: "12345678" }];
+  console.log("Logins gerados:", logins);
+  return logins;
 };
