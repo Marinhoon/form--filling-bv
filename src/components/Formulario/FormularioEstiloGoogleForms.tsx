@@ -536,8 +536,9 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                     }}
                   >
                     <option value="">Selecione</option>
-                    <option value="BV-Consultas">BV-Consultas</option>
-                    <option value="BV-Hospital">BV-Hospital</option>
+                    <option value="BV-Consultas">Bom Viver Clínica - Itaigara</option>
+                    <option value="BV-Hospital">Bom Viver Clínica - IAPI</option>
+                    <option value="BV-Hospital">Bom Viver Hospital 24h - IAPI</option>
                   </select>
                   {touchedFields.unidade && !formData.unidade && (
                     <span style={styles.errorMessage}>Campo obrigatório</span>
