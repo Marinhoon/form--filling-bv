@@ -53,7 +53,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
     atendimento: {
       nome: "Atendimento",
       icone: "📞",
-      funcoes: ["Call-Center", "Recepção Emergência", "Recepção Ambulatório", "Recepção Itaigara"]
+      funcoes: ["Call-Center", "Recepção Emergência - IAPI", "Recepção Ambulatório - IAPI", "Recepção Itaigara", "Recepção Hospital Dia"]
     },
     saude: {
       nome: "Saúde",
@@ -536,6 +536,7 @@ const FormularioEstiloGoogleForms: React.FC = () => {
                     }}
                   >
                     <option value="">Selecione</option>
+                    <option value="BV-Hospital">Bom Viver Hospital - Hospital Dia</option>
                     <option value="BV-Consultas">Bom Viver Clínica - Itaigara</option>
                     <option value="BV-Hospital">Bom Viver Clínica - IAPI</option>
                     <option value="BV-Hospital">Bom Viver Hospital 24h - IAPI</option>
