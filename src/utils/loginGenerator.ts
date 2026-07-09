@@ -94,7 +94,8 @@ export const generateLogins = (
   // ============================================
   else if (funcao === "Recepção Emergência" || 
            funcao === "Recepção Ambulatório" || 
-           funcao === "Recepção Itaigara") {
+           funcao === "Recepção Itaigara" ||
+           funcao === "Recepção Hospital Dia") {
     logins = [
       { type: "Computador", login: loginBase, password: "12345678" },
       { type: "TechSallus", login: loginTechSallus, password: "123456" },
